@@ -27,7 +27,7 @@ function qSymInfo()
     makeMainTable([{"symbol":"A50","keyval":{"BPV":"1.000000","DESC":"A50%20Index"}},{"symbol":"CIF","keyval":{}},{"symbol":"ES","keyval":{}}])
     return;
     */
-    url='/cgi-bin/qsyminfo.py'
+    url='/cgi-bin/qSyminfo.py'
     DoAjax(url, {symbol : "ALL"},
         function(data, textStatus, jqXHR){
 		makeMainTable(data);
@@ -57,12 +57,12 @@ function doAddNewSym(sym){
   return;
  if (true==confirm('Are you sure add symbol: \''+sym+'\'?'))
  {
-   location.href='/cgi-bin/usymbol.py?sym='+myUrlEncode(sym)+'&desc=&bpv=&mko=&mkc=&ssec=';
+   location.href='/cgi-bin/uSymbol.py?sym='+myUrlEncode(sym)+'&desc=&bpv=&mko=&mkc=&ssec=';
  }
 }
 function doupdate(idx, sym, desc, bpv, mko, mkc, ssec){
  //alert('ready to update: '+sym+', desc:'+desc+', bpv:'+bpv)
- location.href='/cgi-bin/usymbol.py?sym='+myUrlEncode(sym)+'&desc='+desc+'&bpv='+bpv+'&mko='+mko+'&mkc='+mkc+
+ location.href='/cgi-bin/uSymbol.py?sym='+myUrlEncode(sym)+'&desc='+desc+'&bpv='+bpv+'&mko='+mko+'&mkc='+mkc+
                '&ssec='+ssec;
 }
 function doimport1min(idx, sym){

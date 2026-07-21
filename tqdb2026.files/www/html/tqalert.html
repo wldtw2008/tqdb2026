@@ -61,7 +61,7 @@ return;
     makeMainTable([{"symbol":"A50","keyval":{"BPV":"1.000000","DESC":"A50%20Index"}},{"symbol":"CIF","keyval":{}},{"symbol":"ES","keyval":{}}])
     return;
     */
-    url='/cgi-bin/qsyminfo.py'
+    url='/cgi-bin/qSyminfo.py'
     DoAjax(url, {symbol : "ALL"},
         function(data, textStatus, jqXHR){
 		alert(data);
