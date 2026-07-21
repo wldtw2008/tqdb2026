@@ -9,7 +9,7 @@ echo $CASS_IP":"$CASS_PORT > /tmp/cass.info
 echo $D2TQ_IP":"$D2TQ_PORT > /tmp/d2tq.info
 
 nohup ./demo_d2tq_server.sh > /tmp/demo_d2tq_server.log &
-cd $TQDB_DIR/tools ; nohup python3 -u TQAlert.py > /tmp/TQ &
+cd $TQDB_DIR/tools ; nohup python3 -u TQAlert.py $CASS_IP $CASS_PORT > /tmp/TQ &
 
 sleep 10
 

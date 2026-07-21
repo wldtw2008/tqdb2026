@@ -1,6 +1,10 @@
 #!/usr/bin/python3
 # coding: utf-8
 
+# 這隻程式負責監看 /tmp/lastTQ 內各商品的跳動狀況，若有超過時間不跳動的，
+# 就呼叫 Cmd#0 ~ Cmd#2 去執行命令
+# 這隻程式會在 tqdbStartup.sh 裡面被叫起來，在背景持續監視
+
 import sys,json,os,math,time,subprocess
 from datetime import datetime
 from dateutil import tz, parser
