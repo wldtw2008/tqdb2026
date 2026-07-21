@@ -92,11 +92,11 @@ def _main():
         iLoopCnt+=1
 
         if (iLoopCnt%10) == 0: #delete mute file if file was modified 1day ago
-            subprocess.call('find /tmp/TQAlert/ -mtime +1 -name "TQAlert.skip.*" -exec rm {} \\;', shell=True)
+            subprocess.call('find /tmp/TQAlertControl/ -mtime +1 -name "TQAlert.skip.*" -exec rm {} \\;', shell=True)
 
         try:
             for cmdIdx in range(0,len(allAlertCmd)):
-                testCmdFile='/tmp/TQAlert/TQAlert.testcmd.%d' % cmdIdx
+                testCmdFile='/tmp/TQAlertControl/TQAlert.testcmd.%d' % cmdIdx
                 if (os.path.isfile(testCmdFile)):
                     _runCmd(allAlertCmd[cmdIdx], '!!TEST!!', 'Hello, this is test of TQAlert#%d.'%(cmdIdx+1))
                     os.remove(testCmdFile)
@@ -110,7 +110,7 @@ def _main():
         curWeekVal = int(math.pow(10, 7-curWeekday)) #monday=1000000, tuesday=0100000 ... sunday=0000001
         # if config change!
         try:
-            with open('/tmp/TQAlert/TQAlert.confchange', 'r') as f:
+            with open('/tmp/TQAlertControl/TQAlert.confchange', 'r') as f:
                 lastChangeTimeS = int(f.readline().strip())
                 if curTimeS<lastChangeTimeS+sleepSec*1.5:
                     _log("%s>Config change<%s"%('='*20, '='*20))
@@ -139,7 +139,7 @@ def _main():
 
             if not (curHHMMSS>=Beg and curHHMMSS<End):
                 continue
-            skipFile = '/tmp/TQAlert/TQAlert.skip.%s' % symbol
+            skipFile = '/tmp/TQAlertControl/TQAlert.skip.%s' % symbol
             if (os.path.isfile(skipFile)):
                 _log("File: %s exist, so skip %s" % (skipFile, symbol))
                 continue
