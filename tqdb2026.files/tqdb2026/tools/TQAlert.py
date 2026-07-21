@@ -9,10 +9,10 @@ from cassandra.cluster import Cluster
 def _log(str):
     print(str)
 
-def _readConfig(keyspace, allTimeRule, allAlertCmd):
+def _readConfig(szCassIP1, szCassPort, keyspace, allTimeRule, allAlertCmd):
     allTimeRule.clear()
     del allAlertCmd[:]
-    cluster = Cluster()
+    cluster = Cluster([szCassIP1])
     session = cluster.connect(keyspace)
     queryStr = "select confVal from %s.conf where confKey='tqconf'" %(keyspace)
     qResult = None
@@ -76,7 +76,9 @@ def _main():
     lastAlertTimeS = {} # last alert time
     allTimeRule = {}
     allAlertCmd = []
-    _readConfig('tqdb1', allTimeRule, allAlertCmd)
+    szCassIP1 = sys.argv[1]
+    szCassPort = sys.argv[2]    
+    _readConfig(szCassIP1, szCassPort, 'tqdb1', allTimeRule, allAlertCmd)
     lastCheckWeekVal=0
     matchingWeekValRule = []
     sleepSec=5
@@ -108,7 +110,7 @@ def _main():
                 lastChangeTimeS = int(f.readline().strip())
                 if curTimeS<lastChangeTimeS+sleepSec*1.5:
                     _log("%s>Config change<%s"%('='*20, '='*20))
-                    _readConfig('tqdb1', allTimeRule, allAlertCmd)
+                    _readConfig(szCassIP1, szCassPort, 'tqdb1', allTimeRule, allAlertCmd)
                     lastCheckWeekVal=999
         except:
             pass
