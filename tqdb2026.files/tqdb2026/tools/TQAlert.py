@@ -71,13 +71,13 @@ def _runCmd(cmd, HEADER, BODY):
         subprocess.call(finalCmd, shell=True)
         _log("    Ran!")
     
-
+szCassIP1 = "127.0.0.1"
+szCassPort = "9042" 
 def _main():
+    global szCassIP1, szCassPort
     lastAlertTimeS = {} # last alert time
     allTimeRule = {}
     allAlertCmd = []
-    szCassIP1 = sys.argv[1]
-    szCassPort = sys.argv[2]    
     _readConfig(szCassIP1, szCassPort, 'tqdb1', allTimeRule, allAlertCmd)
     lastCheckWeekVal=0
     matchingWeekValRule = []
@@ -163,6 +163,9 @@ def _main():
                     _runCmd(cmd, HEADER, BODY)
         time.sleep(sleepSec)
 
+
+szCassIP1 = sys.argv[1]
+szCassPort = sys.argv[2]
 while(True):
     try:
         _main()
