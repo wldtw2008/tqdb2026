@@ -30,7 +30,50 @@ TQDB2026 是基於 2015年開發的tqdb專案(https://github.com/wldtw2008/tqdb)
    export D2TQ_PORT=2001         #TQDB Port，即時行情IP
 
    export TQDB_DIR=/tqdb2026     #PodmanDocker 內的tqdb2026根目錄，請不要修改
+2. 第一次執行cassandra後，需要進去設定 keyspace 與 schema
+   先執行./cassandra_attach.sh 進入虛擬內
+   執行 # cqlsh 複製貼上以下命令
+     CREATE KEYSPACE tqdb1 WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 3 };
 
+     CREATE TABLE tqdb1.tick (
+         symbol text,
+         datetime timestamp,
+         keyval map<text, double>,
+         type int,
+         PRIMARY KEY (symbol, datetime)
+     );
+
+     CREATE TABLE tqdb1.symbol (
+         symbol text PRIMARY KEY,
+         keyval map<text, text>
+     );
+
+     CREATE TABLE tqdb1.minbar (
+         symbol text,
+         datetime timestamp,
+         close double,
+         high double,
+         low double,
+         open double,
+         vol double,
+         PRIMARY KEY (symbol, datetime)
+     );
+
+     CREATE TABLE tqdb1.secbar (
+         symbol text,
+         datetime timestamp,
+         close double,
+         high double,
+         low double,
+         open double,
+         vol double,
+         PRIMARY KEY (symbol, datetime)
+     );
+
+     CREATE TABLE tqdb1.conf (
+         confKey text PRIMARY KEY,
+         confVal text
+     );
 
 啟動步驟:
 1. 啟動Cassandra
@@ -38,7 +81,7 @@ TQDB2026 是基於 2015年開發的tqdb專案(https://github.com/wldtw2008/tqdb)
    若有需要連入Cassandra內(如執行cqlsh)，可執行 ./cassandra_attach.sh
    若要停止Cassandra，可執行 ./cassandra_stop.sh
    
-2. 啟動TQDB2026
+2. 待Cassandra啟動後30秒，再啟動TQDB2026
    cd ~/tqdb2026.git/host ; ./tqdb_start.sh
    若有需要連入TQDB2026內，可執行 tqdb_attach.sh
    若要停止TQDB2026，可執行 ./tqdb_stop.sh
@@ -47,6 +90,9 @@ TQDB2026 是基於 2015年開發的tqdb專案(https://github.com/wldtw2008/tqdb)
 
 維運注意事項：
 1. Cassandra 與 TQDB2026 的時區設定要相同
+   並且host要校時，建議在/etc/crontab裡面放入
+   */30 * * * *   root   chronyd -q 'server clock.stdtime.gov.tw iburst'
+   @reboot        root   sleep 120; chronyd -q 'server clock.stdtime.gov.tw iburst'
 2. 注意 cassandra.data 使用的硬碟空間
 3. 注意 tqdb2026.oldtick 使用的硬碟空間
    
