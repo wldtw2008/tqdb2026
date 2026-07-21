@@ -1,0 +1,7 @@
+export CASS_IP=192.168.122.1
+export CASS_PORT=9042
+
+export D2TQ_IP=10.229.17.110
+export D2TQ_PORT=2001
+
+export TQDB_DIR=/tqdb2026

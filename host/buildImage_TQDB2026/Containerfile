@@ -1,0 +1,23 @@
+FROM registry.access.redhat.com/ubi8/ubi-init
+
+RUN dnf -y update --setopt=sslverify=false
+
+RUN dnf install -y --setopt=sslverify=false \
+    gcc gcc-c++ make cmake gdb git \
+    vim which psmisc procps nc cronie hostname \
+    openssl-devel zlib-devel libstdc++-devel \
+    python3 httpd 
+
+RUN pip3 install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org geomet cassandra-driver
+
+WORKDIR /tqdb2026
+
+COPY ./cassandra-cpp-driver/* /tmp/
+RUN rpm -ivh --nodeps /tmp/cassandra-cpp-driver-2.17.1-1.el8.x86_64.rpm
+RUN rpm -ivh --nodeps /tmp/cassandra-cpp-driver-devel-2.17.1-1.el8.x86_64.rpm
+
+RUN ln -s /usr/bin/nc /usr/bin/netcat
+RUN ln -s /tqdb2026/script_for_sys/profile_tqdb.sh /etc/profile.d/
+
+RUN systemctl enable crond
+RUN systemctl enable httpd
