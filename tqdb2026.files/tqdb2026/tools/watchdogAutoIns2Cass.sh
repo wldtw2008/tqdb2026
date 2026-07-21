@@ -10,7 +10,8 @@ while [ 1 ] ;
 do
     LAST_TS=`cut -b 1- /tmp/lastTQ/*.LastT  | sort | uniq | grep '^[0-9]*' | tail -1`
     CURR_TS=`date +%s`
-    DIFF=`echo ${CURR_TS}-${LAST_TS} | bc `
+    #DIFF=`echo ${CURR_TS}-${LAST_TS} | bc `
+    DIFF=`echo ${CURR_TS} ${LAST_TS} | awk '{print $1-$2}' `
     echo "Difference inverval of current and last tick is "${DIFF}" Sec(s)"
     if [ "${DIFF}" -gt "600" ] ; then
         ps -ef | grep itick | grep -v grep | awk '{print $2}' | xargs -i kill {}
