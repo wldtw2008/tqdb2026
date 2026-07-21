@@ -13,7 +13,7 @@ def _main(keyspace, cmd, params):
         allSyms = params.split(',')
         for sym in allSyms:
             sym = sym.strip()
-            filename = '/tmp/TQAlert/TQAlert.skip.%s' % sym
+            filename = '/tmp/TQAlertControl/TQAlert.skip.%s' % sym
             try:
                 if cmd == 'TQALERT_MUTE': #MUTE!!
                     with open(filename, 'w') as f:
@@ -27,7 +27,7 @@ def _main(keyspace, cmd, params):
                 pass
         retObj['Result'] = 'OK';
     if cmd in ('TQALERT_TESTCMD'):
-        filename = '/tmp/TQAlert/TQAlert.testcmd.%s' % params
+        filename = '/tmp/TQAlertControl/TQAlert.testcmd.%s' % params
         with open(filename, 'w') as f:
             f.write('1\n')
         subprocess.call(['chmod', '0777', filename])
