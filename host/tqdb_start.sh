@@ -1,5 +1,9 @@
 #!/bin/bash
 
+echo Set crontab file mode to 644
+chmod 644 ../tqdb2026.files/etc/crontab
+
+
 podman run -d --rm --name tqdb2026  \
 	--hostname TQDB2026 \
 	--security-opt=label=disable \
