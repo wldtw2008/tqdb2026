@@ -84,17 +84,33 @@ TQDB2026 是基於 2015年開發的tqdb專案(https://github.com/wldtw2008/tqdb)
 2. 待Cassandra啟動後30秒，再啟動TQDB2026
    cd ~/tqdb2026.git/host ; ./tqdb_start.sh
    若有需要連入TQDB2026內，可執行 tqdb_attach.sh
-   若要停止TQDB2026，可執行 ./tqdb_stop.sh
-   
+   若要停止TQDB2026，可執行 ./tqdb_stop.sh  
 **建議將這兩個start.sh放在 host 的 crontab，開機執行。
 
-維運注意事項：
+資料遷移:
+0. 請找任一台主機，容量足夠，且能執行java (java-21-openjdk)
+   並去官網下載dsbulk-1.11.2.jar
+
+1. 匯出舊機From_Cassandra_IP
+   java -jar dsbulk-1.11.2.jar unload -h [From_Cassandra_IP] -k tqdb1 -t conf -url /tmp/tqdb1.conf
+   java -jar dsbulk-1.11.2.jar unload -h [From_Cassandra_IP] -k tqdb1 -t secbar -url /tmp/tqdb1.secbar
+   java -jar dsbulk-1.11.2.jar unload -h [From_Cassandra_IP] -k tqdb1 -t symbol -url /tmp/tqdb1.symbol
+   java -jar dsbulk-1.11.2.jar unload -h [From_Cassandra_IP] -k tqdb1 -t minbar -url /tmp/tqdb1.minbar
+
+2. 匯入新機To_Cassandra_IP
+   java -jar dsbulk-1.11.2.jar load -h [To_Cassandra_IP] -k tqdb1 -t secbar -url /tmp/tqdb1.secbar
+   java -jar dsbulk-1.11.2.jar load -h [To_Cassandra_IP] -k tqdb1 -t conf -url /tmp/tqdb1.conf
+   java -jar dsbulk-1.11.2.jar load -h [To_Cassandra_IP] -k tqdb1 -t symbol -url /tmp/tqdb1.symbol
+   java -jar dsbulk-1.11.2.jar load -h [To_Cassandra_IP] -k tqdb1 -t minbar -url /tmp/tqdb1.minbar
+
+維運注意事項:
 1. Cassandra 與 TQDB2026 的時區設定要相同
    並且host要校時，建議在/etc/crontab裡面放入
    */30 * * * *   root   chronyd -q 'server clock.stdtime.gov.tw iburst'
    @reboot        root   sleep 120; chronyd -q 'server clock.stdtime.gov.tw iburst'
 2. 注意 cassandra.data 使用的硬碟空間
-3. 注意 tqdb2026.oldtick 使用的硬碟空間
+3. 注意 tqdb2026.oldtick 使用的硬碟空間 (crontab 裡面有刪除過舊的命令)
+
    
 
 
