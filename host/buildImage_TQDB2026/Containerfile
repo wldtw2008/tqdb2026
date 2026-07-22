@@ -4,7 +4,7 @@ RUN dnf -y update --setopt=sslverify=false
 
 RUN dnf install -y --setopt=sslverify=false \
     gcc gcc-c++ make cmake gdb git \
-    vim which psmisc procps nc cronie hostname \
+    vim which psmisc procps nc cronie hostname rsyslog \
     openssl-devel zlib-devel libstdc++-devel \
     python3 httpd 
 
@@ -21,3 +21,4 @@ RUN ln -s /tqdb2026/script_for_sys/profile_tqdb.sh /etc/profile.d/
 
 RUN systemctl enable crond
 RUN systemctl enable httpd
+RUN systemctl enable rsyslog

@@ -17,8 +17,8 @@ nohup ./demo_d2tq_server.sh > /tmp/demo_d2tq_server.sh.log &
 cd $TQDB_DIR/tools ; nohup python3 -u TQAlert.py $CASS_IP $CASS_PORT > /tmp/TQAlert.py.log &
 
 #start up get tick and insert to cassandra
-cd $TQDB_DIR/tools && ./autoIns2Cass.sh > /tmp/autoIns2Cass.sh.log &
+cd $TQDB_DIR/tools ; nohup ./autoIns2Cass.sh > /tmp/autoIns2Cass.sh.log &
 
 #start up watchdog of autoIns2Cass
-cd $TQDB_DIR/tools && ./watchdogAutoIns2Cass.sh &
+cd $TQDB_DIR/tools ; nohup ./watchdogAutoIns2Cass.sh > /tmp/watchdogAutoIns2Cass.sh.log &
 
