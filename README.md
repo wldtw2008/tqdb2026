@@ -112,6 +112,16 @@ TQDB2026 是基於 2015年開發的tqdb專案(https://github.com/wldtw2008/tqdb)
 3. 注意 tqdb2026.oldtick 使用的硬碟空間 (crontab 裡面有刪除過舊的命令)
 
    
-
+WINDOWS注意事項:
+1. 因此專案有symbol-link，也有file mode問題，同時python也有RCLF問題，因此
+   不建議使用podman desktop方式在純windows 檔案系統下運作。(問題會多到瘋掉)
+   **請使用wsl command line 進入wsl，用git clone 此專案後，搭配podman執行，會容易很多。
+2. 建議 cassandra.data、tqdb2026.oldtick這兩個資料夾改用 softlink方式鏈結到 /mnt/c/AutoTrade/tqdb/下
+   這樣資料才是保留在真實硬碟上。
+3. 因為Windows WSL 特性，虛擬機網路通聯須繞行真實網卡，所以請執行下面命令
+   netsh interface portproxy add v4tov4 listenport=9042 listenaddress=0.0.0.0 connectport=9042 connectaddress=[WLS IP 如 172.18.1.13]
+   netsh interface portproxy add v4tov4 listenport=8080 listenaddress=0.0.0.0 connectport=8080 connectaddress=[WLS IP 如 172.18.1.13]
+   並調整tqdb_profile.sh 內的IP為真實網卡IP
+    
 
 
