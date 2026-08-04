@@ -116,6 +116,19 @@ WINDOWS注意事項:
 1. 因此專案有symbol-link，也有file mode問題，同時python也有RCLF問題，因此
    不建議使用podman desktop方式在純windows 檔案系統下運作。(問題會多到瘋掉)
    **請使用wsl command line 進入wsl，用git clone 此專案後，搭配podman執行，會容易很多。
+1.1 設定systemd為啟動命令: 
+   開啟wsl後，請編輯/etc/wsl.conf，設定如下:
+   [boot]
+   systemd=true
+1.2 安裝crond、rsyslog
+   sudo yum install crond rsyslog
+1.3 編輯排程 /etc/crontab
+   @reboot root  sleep 30 ; date >> /tmp/bootup
+   @reboot user  sleep 30 ; cd /home/user/tqdb2026.git/host ; ./cassandra_start.sh
+   @reboot user  sleep 60 ; cd /home/user/tqdb2026.git/host ; ./tqdb_start.sh
+1.4 重啟wsl
+   wsl --shutdown
+   wsl 
 2. 建議 cassandra.data、tqdb2026.oldtick這兩個資料夾改用 softlink方式鏈結到 /mnt/c/AutoTrade/tqdb/下
    這樣資料才是保留在真實硬碟上。
 3. 因為Windows WSL 特性，虛擬機網路通聯須繞行真實網卡，所以請執行下面命令
