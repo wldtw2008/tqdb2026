@@ -3,6 +3,7 @@ TQDB2026 是基於 2015年開發的tqdb專案(https://github.com/wldtw2008/tqdb)
 1. 使用 Cassandra 4.1.11
 2. 改用 Python3
 3. 基於 RedHat 8.10 上的 Podman 搭建 rootless Image/Container 環境提供服務
+   經過測試，也能在 Windows11 以純 WSL 環境提供服務。
 
 安裝步驟：
 1. 請先安裝好RedHat 8.10，並安裝Podman相關套件
