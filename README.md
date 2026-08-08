@@ -132,10 +132,32 @@ WINDOWS注意事項:
    wsl 
 2. 建議 cassandra.data、tqdb2026.oldtick這兩個資料夾改用 softlink方式鏈結到 /mnt/c/AutoTrade/tqdb/下
    這樣資料才是保留在真實硬碟上。
-3. 因為Windows WSL 特性，虛擬機網路通聯須繞行真實網卡，所以請執行下面命令
+3. 建議使用預設的 rootless Windows WSL 模式，在這種模式的網路稱為 pasta模式。
+   pasta模式下的虛擬機互相通聯時，要用目的IP: 169.254.1.2 ，以通連線其他虛擬機或WSL。
+   也就是在tqdb2026主機裡面要連cassandra主機，必須要連 169.254.1.2:9042
+   而tqdb2026主機裡面要連往的d2tq主機IP，則要設定為WINDOWS本機的實體IP 或 WINDOWS本機的WSL HyperV IP(172.18.0.1)
+	* 建議的tqdb_profile.sh 的IP如下:
+	export CASS_IP=169.254.1.2
+	export CASS_PORT=9042
+
+	export D2TQ_IP=172.18.0.1
+	export D2TQ_PORT=2001
+
+	export TQDB_DIR=/tqdb2026
+4. 最後，Windows上要通聯的TQDB 請用WSL IP(172.18.1.x)，也就是 http://172.18.1.x:8080
+   或者在WINDOWS主機上執行以下命令建立通訊埠轉發，繞行Windows真實網卡:
    netsh interface portproxy add v4tov4 listenport=9042 listenaddress=0.0.0.0 connectport=9042 connectaddress=[WLS IP 如 172.18.1.13]
    netsh interface portproxy add v4tov4 listenport=8080 listenaddress=0.0.0.0 connectport=8080 connectaddress=[WLS IP 如 172.18.1.13]
-   並調整tqdb_profile.sh 內的IP為真實網卡IP
-    
-
+   網路架構如下
+    外界
+     |
+   Windows 實體機 HyperV IP: 172.18.0.1  
+     |            真實 IP  : 192.168.1.x    --->+
+     |                                          | 透過 portproxy v4tov4繞行
+    WSL    IP: 172.18.1.13                  <---+
+     |
+    Podman-+
+           +-- Cassandra  <---+
+           |                  | 169.254.1.2 通聯彼此
+           +-- TQDB2026   <---+
 
